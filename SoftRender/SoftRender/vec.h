@@ -17,7 +17,7 @@ public:
 	// sample: double x = vec[0]
 	double operator[] (const int i) const { return data[i]; }
 
-	// 模
+	// vec norm
 	double norm2() const { return (*this) * (*this); }
 	double norm() const { return std::sqrt(norm2()); }
 
@@ -37,7 +37,28 @@ public:
 	}
 };
 
-// 下面是各种基础运算  夯一夯 练习一下
+
+// partial specialization template
+template<>
+struct vec<2>
+{
+	double x{}, y{};	// {} means default-initialization
+
+	vec() = default;
+	vec(double x, double y) : x(x), y(y) {}
+
+	// indexer
+	double& operator[](const int i) { return 0 == i ? x : y; }
+	double operator[] (const int i) const { return 0 == i ? x : y; }
+
+
+	// norm
+	double norm2() const { return (*this) * (*this); }
+	double norm() const { return std::sqrt(norm2()); }
+}
+
+
+// override operator
 template<int n>
 vec<n> operator+(const vec<n>& left, const vec<n>& right) {
 	vec<n> v = left;
@@ -82,6 +103,3 @@ vec<dst> proj(const vec<src>& src_vec, double fill = 0) {
 	return v;
 }
 
-
-
-////////// 下面是针对 vec2 和 vec3 的偏特化
