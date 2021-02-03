@@ -9,31 +9,43 @@
 
 
 const TGAColor red = TGAColor(255, 0, 0, 255);
-//const TGAColor rr(255, 0, 0, 255);
+const TGAColor white(255, 255, 255, 255);
+
+const int height = 1280;
+const int width = 1080;
 
 
 int main(int argc, char** argv)
 {
+	TGAImage img(width, height, TGAImage::RGB);
+
 	// load
-	Model* m = new Model("obj/african_head.obj");
+	Model* model = new Model("../obj/african_head/african_head.obj");
 
 	// iterate model triangles
-	int nfaces = m->nfaces();
+	int nfaces = model->nfaces();
 	for (int i = 0; i < nfaces; i++)
 	{
+		int* face = model->face(i);
 
-		std::vector<int> face = m->m
+		for (int face_idx = 0; face_idx < 3; face_idx++)
+		{
+			vec3 v0 = model->vert(face[face_idx]);
+			vec3 v1 = model->vert(face[(face_idx + 1) % 3]);
 
+			int x0 = (v0.x + 1.f) * width / 2;
+			int y0 = (v0.y + 1.f) * height / 2;
+			int x1 = (v1.x + 1.f) * width / 2;
+			int y1 = (v1.y + 1.f) * height / 2;
+
+			line(x0, y0, x1, y1, img, red);
+		}
 	}
 
-
-
-	TGAImage img(100, 100, TGAImage::RGB);
-
-	line(25, 25, 75, 75, img, red);
-
 	img.flip_vertically();
-	img.write_tga_file("../output/e1.tga");
+	img.write_tga_file("../output/e1.tga", false);
+
+	delete model;
 
 	return 0;
 }
