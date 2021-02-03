@@ -20,7 +20,7 @@ int main(int argc, char** argv)
 	TGAImage img(width, height, TGAImage::RGB);
 
 	// load
-	Model* model = new Model("../obj/african_head/african_head.obj");
+	Model* model = new Model("../resource/african_head/african_head.obj");
 
 	// iterate model triangles
 	int nfaces = model->nfaces();
@@ -37,7 +37,7 @@ int main(int argc, char** argv)
 			int y0 = (v0.y + 1.f) * height / 2;
 			int x1 = (v1.x + 1.f) * width / 2;
 			int y1 = (v1.y + 1.f) * height / 2;
-
+				
 			line(x0, y0, x1, y1, img, red);
 		}
 	}

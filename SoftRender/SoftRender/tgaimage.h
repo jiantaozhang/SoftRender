@@ -1,5 +1,4 @@
-﻿#ifndef __IMAGE_H__
-#define __IMAGE_H__
+﻿#pragma once
 
 #include <cstdint>
 #include <fstream>
@@ -72,5 +71,3 @@ public:
 	std::uint8_t* buffer();
 	void clear();
 };
-
-#endif //__IMAGE_H__

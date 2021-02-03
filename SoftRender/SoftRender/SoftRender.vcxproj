@@ -30,6 +30,7 @@
     <ClCompile Include="matrix.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="tgaimage.cpp" />
+    <ClCompile Include="vec.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

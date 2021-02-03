@@ -1,6 +1,4 @@
-﻿#ifndef __MODEL_H__
-#define __MODEL_H__
-
+﻿#pragma once
 
 #include <vector>
 #include <string>
@@ -26,4 +24,4 @@ private:
 	vector<int*> _faces;
 };
 
-#endif // !__MODEL_H__
+

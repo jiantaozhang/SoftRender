@@ -1,4 +1,5 @@
-﻿
+﻿#pragma once
+
 void line(int x1, int y1, int x2, int y2, TGAImage& image, TGAColor color) {
 	// 处理斜率的绝对值大于 1 的直线
 	bool steep = false;
