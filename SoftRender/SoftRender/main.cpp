@@ -62,7 +62,7 @@ void draw_triangle()
 
 int main(int argc, char** argv)
 {
-	//african_head();
+	african_head();
 	draw_triangle();
 
 	return 0;
