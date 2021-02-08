@@ -32,6 +32,7 @@ public:
 				break;
 			}
 		}
+		return ret;
 	}
 };
 
@@ -110,6 +111,8 @@ struct vec<2>
 	double norm2() const { return (*this) * (*this); }
 	double norm() const { return std::sqrt(norm2()); }
 
+	// operator
+
 	// str
 	operator std::string() {
 		std::string s;
@@ -128,6 +131,7 @@ struct vec<3>
 {
 	union {
 		struct { double x, y, z; };
+		struct { double u, v, w; };
 		double data[3];
 	};
 
@@ -157,3 +161,5 @@ struct vec<3>
 };
 typedef vec<3> vec3;
 
+vec3 cross(const vec3& v1, const vec3& v2);
+double cross(const vec2& v1, const vec2& v2);

@@ -5,7 +5,7 @@
 
 #include "tgaimage.h"
 #include "model.h"
-#include "common.h"
+#include "draw.h"
 
 
 const TGAColor red = TGAColor(255, 0, 0, 255);
@@ -15,8 +15,7 @@ const int height = 1280;
 const int width = 1080;
 
 
-int main(int argc, char** argv)
-{
+void african_head() {
 	TGAImage img(width, height, TGAImage::RGB);
 
 	// load
@@ -37,7 +36,7 @@ int main(int argc, char** argv)
 			int y0 = (v0.y + 1.f) * height / 2;
 			int x1 = (v1.x + 1.f) * width / 2;
 			int y1 = (v1.y + 1.f) * height / 2;
-				
+
 			line(x0, y0, x1, y1, img, red);
 		}
 	}
@@ -46,6 +45,25 @@ int main(int argc, char** argv)
 	img.write_tga_file("../output/e1.tga", false);
 
 	delete model;
+}
+
+void draw_triangle()
+{
+	TGAImage img(width, height, TGAImage::RGB);
+
+	vec2 points[3];
+	points[0] = vec2(100, 100);
+	points[1] = vec2(300, 700);
+	points[2] = vec2(200, 900);
+
+	triangle(points, img, red);
+	img.write_tga_file("../output/triangle.tga");
+}
+
+int main(int argc, char** argv)
+{
+	//african_head();
+	draw_triangle();
 
 	return 0;
 }
