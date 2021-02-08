@@ -50,7 +50,7 @@ void line(int x1, int y1, int x2, int y2, TGAImage& image, TGAColor color) {
 }
 
 
-void triangle(const vec2* points, TGAImage& img, const TGAColor& color)
+int triangle(const vec2* points, TGAImage& img, const TGAColor& color)
 {
 	double w = img.get_width();
 	double h = img.get_height();
@@ -73,6 +73,8 @@ void triangle(const vec2* points, TGAImage& img, const TGAColor& color)
 	vec2 v_bc = points[2] - points[1];
 	vec2 v_ca = points[0] - points[2];
 
+	int cnt = 0;
+
 	// iterate and fill
 	for (int y = min.y; y <= max.y; y++)
 	{
@@ -93,8 +95,10 @@ void triangle(const vec2* points, TGAImage& img, const TGAColor& color)
 				continue;
 
 			img.set(x, y, color);
+			++cnt;
 		}
 	}
+	return cnt;
 }
 
 

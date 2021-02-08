@@ -15,6 +15,12 @@ const int height = 1280;
 const int width = 1080;
 
 
+TGAColor _rand_color()
+{
+	TGAColor color(rand() % 255, rand() % 255, rand() % 255);
+	return color;
+}
+
 void african_head() {
 	TGAImage img(width, height, TGAImage::RGB);
 
@@ -27,18 +33,22 @@ void african_head() {
 	{
 		int* face = model->face(i);
 
+		// vec3 -> vec2
+		vec2 pts[3];
 		for (int face_idx = 0; face_idx < 3; face_idx++)
 		{
 			vec3 v0 = model->vert(face[face_idx]);
-			vec3 v1 = model->vert(face[(face_idx + 1) % 3]);
 
 			int x0 = (v0.x + 1.f) * width / 2;
 			int y0 = (v0.y + 1.f) * height / 2;
-			int x1 = (v1.x + 1.f) * width / 2;
-			int y1 = (v1.y + 1.f) * height / 2;
 
-			line(x0, y0, x1, y1, img, red);
+			pts[face_idx] = vec2(x0, y0);
 		}
+
+		// 三顶点 直接忽略深度（简略版）
+
+		int pixels = triangle(pts, img, _rand_color());
+		std::cout << "pixels: " << pixels << std::endl;
 	}
 
 	img.flip_vertically();

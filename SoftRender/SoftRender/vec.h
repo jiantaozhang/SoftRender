@@ -126,6 +126,7 @@ struct vec<2>
 };
 typedef vec<2> vec2;
 
+
 template<>
 struct vec<3>
 {
@@ -137,6 +138,9 @@ struct vec<3>
 
 	vec() = default;
 	vec(double x, double y, double z) : x(x), y(y), z(z) {}
+
+	// 
+	operator vec<2>() { return vec<2>(x, y); }
 
 	// indexer
 	double& operator[](const int i) { return data[i]; }
