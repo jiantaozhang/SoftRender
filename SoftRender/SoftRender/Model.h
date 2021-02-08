@@ -18,10 +18,10 @@ public:
 	vec3 vert(int i);
 	int* face(int i);	// int[3]
 
+	void face_verts(int face_idx, vec3* pts);
+
 private:
 
 	vector<vec3> _verts;
 	vector<int*> _faces;
 };
-
-

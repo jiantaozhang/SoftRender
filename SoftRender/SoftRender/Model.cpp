@@ -44,7 +44,7 @@ Model::Model(const char* file) {
 
 			}
 			this->_faces.push_back(f);
-			cout << "face: " << f[0] << ", " << f[1] << ", " << f[2] << endl;
+			//cout << "face: " << f[0] << ", " << f[1] << ", " << f[2] << endl;
 		}
 	}
 	cout << "Model Info" << endl;
@@ -73,4 +73,12 @@ vec3 Model::vert(int i)
 int* Model::face(int i)
 {
 	return _faces[i];
+}
+
+void Model::face_verts(int face_idx, vec3* pts)
+{
+	int* pts_idx = face(face_idx);
+	for (int i = 0; i < 3; i++)
+		pts[i] = vert(pts_idx[i]);
+
 }

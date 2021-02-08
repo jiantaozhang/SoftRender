@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <string>
+#include <iostream>
 
 template<int n>
 struct vec
@@ -64,8 +65,8 @@ double operator*(const vec<n>& left, const vec<n>& right) {
 template<int n>
 vec<n> operator*(const double& fac, const vec<n>& src) {
 	vec<n> v = src;
-	for (int i = n; i--; src[i] *= fac);
-	return src;
+	for (int i = n; i--; v[i] *= fac);
+	return v;
 }
 
 template<int n>
@@ -90,6 +91,19 @@ vec<dst> proj(const vec<src>& src_vec, double fill = 0) {
 	return v;
 }
 
+template<int n>
+std::ostream& operator<<(std::ostream& s, const vec<n>& v)
+{
+	s << "(";
+	for (int i = 0; i < n - 1; i++)
+	{
+		s << v[i] << ",";
+	}
+
+	s << v[n - 1] << ")";
+	return s;
+}
+
 
 
 // partial specialization template
@@ -111,18 +125,8 @@ struct vec<2>
 	double norm2() const { return (*this) * (*this); }
 	double norm() const { return std::sqrt(norm2()); }
 
-	// operator
-
 	// str
-	operator std::string() {
-		std::string s;
-		s += "(";
-		s += x;
-		s += ",";
-		s += y;
-		s += ")";
-		return s;
-	}
+
 };
 typedef vec<2> vec2;
 
@@ -166,4 +170,5 @@ struct vec<3>
 typedef vec<3> vec3;
 
 vec3 cross(const vec3& v1, const vec3& v2);
+
 double cross(const vec2& v1, const vec2& v2);
