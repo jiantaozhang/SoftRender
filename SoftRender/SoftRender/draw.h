@@ -49,70 +49,26 @@ void line(int x1, int y1, int x2, int y2, TGAImage& image, TGAColor color) {
 	}
 }
 
-
-int triangle(const vec2* points, TGAImage& img, const TGAColor& color)
-{
-	double w = img.get_width();
-	double h = img.get_height();
-
-	// calc bounding
-	vec2 min(double_max, double_max);
-	vec2 max(0, 0);
-	for (int i = 0; i < 3; i++)
-	{
-		vec2 p = points[i];
-		min.x = std::min(p.x, min.x);
-		min.y = std::min(p.y, min.y);
-
-		max.x = std::max(p.x, max.x);
-		max.y = std::max(p.y, max.y);
-	}
-
-
-	vec2 v_ab = points[1] - points[0];
-	vec2 v_bc = points[2] - points[1];
-	vec2 v_ca = points[0] - points[2];
-
-	int cnt = 0;
-
-	// iterate and fill
-	for (int y = min.y; y <= max.y; y++)
-	{
-		for (int x = min.x; x <= max.x; x++)
-		{
-			vec2 p = vec2(x, y);
-			// determine if be within triangle
-			vec2 v_ap = p - points[0];
-			if (cross(v_ab, v_ap) < 0)
-				continue;
-
-			vec2 v_bp = p - points[1];
-			if (cross(v_bc, v_bp) < 0)
-				continue;
-
-			vec2 v_cp = p - points[2];
-			if (cross(v_ca, v_cp) < 0)
-				continue;
-
-			img.set(x, y, color);
-			++cnt;
-		}
-	}
-	return cnt;
-}
-
-
 // 计算有三个points 组成p时，对应的三个分量
-vec3 barycenter(const vec2* points, const vec2 p)
+vec3 barycenter(const vec2* pixels, const vec2 p)
 {
-	vec3 vecx(points[1].x - points[0].x, points[2].x - points[0].x, points[0].x - p.x);
-	vec3 vecy(points[1].y - points[0].y, points[2].y - points[0].y, points[0].y - p.y);
+	vec3 vecx(pixels[1].x - pixels[0].x, pixels[2].x - pixels[0].x, pixels[0].x - p.x);
+	vec3 vecy(pixels[1].y - pixels[0].y, pixels[2].y - pixels[0].y, pixels[0].y - p.y);
 
-	vec3 uvw = cross(vecx, vecy);
-	if (abs(uvw.w) < 0.001f)
+	vec3 bc = cross(vecx, vecy);
+
+	// 退化成一条线，重心目前来说没有那么重要
+	if (abs(bc.z) < 1)
 	{
-		return vec3(1, 0, 0);	// 这个值 不知道怎么设置好
+		// 姑且认定 u=1;v=1;
+		return vec3(-1, 1, 1);	// 这个值 不知道怎么设置好
 	}
 
-	return uvw / uvw.w;
+	// (1-u-v, u, v)
+	return vec3(1 - bc.x - bc.y, bc.x, bc.y) / bc.w;
 }
+
+
+
+
+

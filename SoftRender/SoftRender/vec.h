@@ -118,6 +118,8 @@ struct vec<2>
 	vec() = default;
 	vec(double x, double y) : x(x), y(y) {}
 
+	//operator vec<3>() const { return vec<3>(x, y, 0); }
+
 	// indexer
 	double& operator[](const int i) { return data[i]; }
 	double operator[] (const int i) const { return data[i]; }
@@ -142,9 +144,10 @@ struct vec<3>
 
 	vec() = default;
 	vec(double x, double y, double z) : x(x), y(y), z(z) {}
+	//vec(vec2 v2) : x(v2.x), y(v2.y), z(0) {}
 
 	// 
-	operator vec<2>() { return vec<2>(x, y); }
+	operator vec<2>() const { return vec<2>(x, y); }
 
 	// indexer
 	double& operator[](const int i) { return data[i]; }
