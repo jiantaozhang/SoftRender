@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="buffer.h" />
-    <ClInclude Include="common.h" />
     <ClInclude Include="draw.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="matrix.h" />

@@ -21,7 +21,10 @@ const TGAColor white(255, 255, 255, 255);
 const int height = 1280;
 const int width = 1080;
 
-vec3 world2Screen(vec3 w) { return vec3((w.x + 1) / 2 * width, (w.y + 1) / 2 * height, w.z); }
+vec3 world2Screen(vec3 w) { 
+	int scale = std::min(height, width);
+	return vec3((w.x + 1) / 2 * scale, (w.y + 1) / 2 * scale, w.z); 
+}
 
 vec3 light_dir(0, 0, -1);
 TGAColor _grayscale(double s) { return TGAColor(255 * s, 255 * s, 255 * s); }
@@ -40,7 +43,7 @@ TGAColor _rand_color()
 
 
 int draw_triangle(
-	const vec3* vertexs,
+	const vec3* verts,
 	const TGAColor& color,
 	buffer<float>* zbuffer,
 	buffer<TGAColor>* framebuffer
@@ -50,7 +53,7 @@ int draw_triangle(
 	vec2* vpixels = new vec2[3];
 	for (int i = 0; i < 3; i++)
 	{
-		vec3 screen_pos = world2Screen(vertexs[i]);
+		vec3 screen_pos = world2Screen(verts[i]);
 		vpixels[i] = screen_pos;
 	}
 
@@ -104,12 +107,11 @@ int draw_triangle(
 			float z = 0;
 			for (int i = 0; i < 3; i++)
 			{
-				z += vertexs[i].z * center.data[i];
+				z += verts[i].z * center.data[i];
 			}
 
-
-			//if (z < zbuffer->Get(x, y))
-			//	continue;
+			if (z < zbuffer->Get(x, y))
+				continue;
 
 			zbuffer->Set(x, y, z);
 			framebuffer->Set(x, y, color);
@@ -157,39 +159,49 @@ void _write_z_img(const buffer<float>* zbuffer, TGAImage* img)
 
 void african_head() {
 
-
 	// load
 	Model* model = new Model("../resource/african_head/african_head.obj");
+
+	fstream fs("../output/log.txt", ios::trunc | ios::out);
+
 
 	// buffer
 	buffer<TGAColor>* framebuffer = new buffer<TGAColor>(width, height);
 	buffer<float>* zbuffer = new buffer<float>(width, height);
 	zbuffer->Fill(0);
 
+	float albedo_r = 0;
+	float albedo_g = 0;
+	float albedo_a = 0;
+
 	// iterate model triangles
 	int nfaces = model->nfaces();
-	for (int i = 0; i < nfaces; i++)
+	for (int i = 0; i < nfaces; i++)	// todo  hh 先画一半 速度快一点
 	{
+		fs << "face: " << i << std::endl;
 		int* face = model->face(i);
 
 		vec3 v3_pts[3];
 		model->face_verts(i, v3_pts);
+		fs << "\tverts:" << v3_pts[0] << ", " << v3_pts[1] << ", " << v3_pts[2] << std::endl;
 
 		// normalized normal
 		vec3 normal = cross(v3_pts[2] - v3_pts[1], v3_pts[1] - v3_pts[0]);
 		normal = normal / normal.norm();
-		//std::cout << "normal: " << normal << std::endl;
+		fs << "\t" << "normal: " << normal << std::endl;
 
 		// light_dir dot normal
 		vec3 inv_light_dir = -1 * light_dir;
 		double light_fac = std::max((double)0, normal * light_dir);
+		fs << "\t" << "light fac: " << light_fac << std::endl;
 
 		// 这里模型的方向不太对 !
 
-		if (light_fac < 0.001f )
-			draw_triangle(v3_pts, green, zbuffer, framebuffer);
-		else
-			draw_triangle(v3_pts, white * light_fac, zbuffer, framebuffer);		
+		TGAColor albedo = TGAColor(albedo_r, albedo_g, albedo_a);
+		draw_triangle(v3_pts, white * light_fac, zbuffer, framebuffer);
+
+		fs << "________" << std::endl;
+		++albedo_r;
 	}
 
 	// 写入
@@ -201,6 +213,9 @@ void african_head() {
 	_write_z_img(zbuffer, &img_z);
 	img_z.write_tga_file("../output/african_head_z.tga");
 
+
+	fs.flush();
+	fs.close();
 
 	delete model;
 }
@@ -216,7 +231,7 @@ void triangle()
 	points[0] = vec3(-1, -1, 0);
 	points[1] = vec3(0.3, 0.7, 0.2);
 	points[2] = vec3(0.2, 0.9, 0.7);
-
+	
 	draw_triangle(points, red, zbuffer, framebuffer);
 
 	// write

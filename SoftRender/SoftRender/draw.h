@@ -64,8 +64,9 @@ vec3 barycenter(const vec2* pixels, const vec2 p)
 		return vec3(-1, 1, 1);	// 这个值 不知道怎么设置好
 	}
 
+	bc = bc / bc.z;
 	// (1-u-v, u, v)
-	return vec3(1 - bc.x - bc.y, bc.x, bc.y) / bc.w;
+	return vec3(1 - bc.x - bc.y, bc.x, bc.y);
 }
 
 
