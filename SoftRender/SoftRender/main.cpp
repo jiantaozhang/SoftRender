@@ -18,15 +18,15 @@ const TGAColor red = TGAColor(255, 0, 0, 255);
 const TGAColor green = TGAColor(0, 255, 0, 255);
 const TGAColor white(255, 255, 255, 255);
 
-const int height = 1280;
-const int width = 1080;
+const int height = 1000;
+const int width = 1000;
 
 vec3 world2Screen(vec3 w) { 
 	int scale = std::min(height, width);
 	return vec3((w.x + 1) / 2 * scale, (w.y + 1) / 2 * scale, w.z); 
 }
 
-vec3 light_dir(0, 0, -1);
+vec3 light_dir(0, 0, -1);	// 平行光自身的方向
 TGAColor _grayscale(double s) { return TGAColor(255 * s, 255 * s, 255 * s); }
 
 template<typename T>
@@ -50,7 +50,7 @@ int draw_triangle(
 )
 {
 
-	vec2* vpixels = new vec2[3];
+	vec2 vpixels[3];
 	for (int i = 0; i < 3; i++)
 	{
 		vec3 screen_pos = world2Screen(verts[i]);
@@ -110,6 +110,7 @@ int draw_triangle(
 				z += verts[i].z * center.data[i];
 			}
 
+			// 只有 depth 比当前的大，才会进行覆盖
 			if (z < zbuffer->Get(x, y))
 				continue;
 
@@ -194,8 +195,6 @@ void african_head() {
 		vec3 inv_light_dir = -1 * light_dir;
 		double light_fac = std::max((double)0, normal * light_dir);
 		fs << "\t" << "light fac: " << light_fac << std::endl;
-
-		// 这里模型的方向不太对 !
 
 		TGAColor albedo = TGAColor(albedo_r, albedo_g, albedo_a);
 		draw_triangle(v3_pts, white * light_fac, zbuffer, framebuffer);
